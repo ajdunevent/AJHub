@@ -1,0 +1,43 @@
+# flatpak-repo
+
+Signed Flatpak repository for the Dunevent apps, hosted on GitHub Pages.
+
+## Using it
+
+```
+flatpak remote-add --user dunevent https://ajdunevent.github.io/flatpak-repo/index.flatpakrepo
+flatpak install --user dunevent net.dunevent.Ripples
+```
+
+Or install one app directly:
+
+```
+flatpak install --user https://ajdunevent.github.io/flatpak-repo/net.dunevent.Ripples.flatpakref
+```
+
+## How it works
+
+`publish.yml` downloads the latest release bundles of every app listed in
+`apps.txt`, imports them into a fresh OSTree repository, signs it, and deploys
+it to Pages. Only the newest version of each app is kept. It runs every six
+hours, on manual dispatch, and when `apps.txt` or the scripts change.
+
+Adding an app: add a line to `apps.txt` (`owner/repo AssetPrefix`). The app's
+releases must include `<AssetPrefix>-<arch>-latest.flatpak` assets.
+
+## One-time setup
+
+1. Settings > Pages > Source: GitHub Actions.
+2. Create the signing key (no passphrase, used only by this workflow):
+
+   ```
+   gpg --batch --quick-generate-key --passphrase '' "Dunevent Flatpak Repository" rsa4096 sign never
+   gpg --list-secret-keys --keyid-format long
+   gpg --armor --export-secret-keys <FINGERPRINT>
+   ```
+
+3. Settings > Secrets and variables > Actions > New repository secret:
+   `GPG_PRIVATE_KEY`, containing the full armored output of the last command.
+4. Back up the private key somewhere safe. Replacing it later means every user
+   must re-add the remote.
+5. Actions > Publish > Run workflow.

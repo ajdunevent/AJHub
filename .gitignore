@@ -1,0 +1,4 @@
+# Signing key material. Never commit.
+flatpak-signing-key.asc
+*.asc
+*.gpg
