@@ -42,7 +42,8 @@ jobs:
           mkdir bundles
           while read -r repo prefix; do
             [[ -z "$repo" || "$repo" == \#* ]] && continue
-            gh release download --repo "$repo" --pattern "${prefix}-*-latest.flatpak" --dir bundles
+            gh release download --repo "$repo" --pattern "${prefix}-*-latest.flatpak" --dir bundles \
+              || echo "::warning::No release bundles found for $repo; skipping."
           done < apps.txt
 
       - name: Build repository
