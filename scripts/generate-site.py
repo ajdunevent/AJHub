@@ -16,7 +16,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-REMOTE_NAME = "dunevent"
+REMOTE_NAME = "ajhub"
+TITLE = "AJHub"
+SUBTITLE = "AJ's Flatpak Repository"
 ICON_PATHS = [
     "scalable/apps/{id}.svg",
     "512x512/apps/{id}.png",
@@ -80,7 +82,7 @@ PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} Flatpak Repository</title>
+<title>{title}: {subtitle}</title>
 <style>
 :root {{
   --bg: #fafafa; --card: #ffffff; --fg: #1e1e1e; --muted: #5e5c64;
@@ -136,8 +138,8 @@ a {{ color: var(--accent); }}
 </head>
 <body>
 <main>
-<h1>{title} Flatpak Repository</h1>
-<p>Apps built from source on GitHub, published as a signed Flatpak repository.</p>
+<h1>{title}</h1>
+<p>{subtitle}. Apps built from source on GitHub, published as a signed Flatpak repository.</p>
 
 <h2>Add the repository</h2>
 <div class="card">
@@ -176,7 +178,6 @@ def main():
     apps_file, repo_dir, base_url, readme = sys.argv[1:5]
     repo_dir = Path(repo_dir)
     base_url = base_url.rstrip("/") + "/"
-    title = "Dunevent"
     ids = app_ids(repo_dir)
 
     entries = []
@@ -209,7 +210,7 @@ def main():
             remote=REMOTE_NAME,
         ))
     (repo_dir / "index.html").write_text(PAGE.format(
-        title=title, remote=REMOTE_NAME, base_url=base_url,
+        title=html.escape(TITLE), subtitle=html.escape(SUBTITLE), remote=REMOTE_NAME, base_url=base_url,
         apps="\n".join(cards) or '<p>No apps yet.</p>',
     ))
 

@@ -7,7 +7,9 @@ set -euo pipefail
 bundles=$1
 repo=$2
 base_url=${3%/}/
-title=${REPO_TITLE:-Dunevent}
+title=${REPO_TITLE:-AJHub}
+comment=${REPO_COMMENT:-"AJ's Flatpak Repository"}
+remote_name=${REMOTE_NAME:-ajhub}
 runtime_repo=https://dl.flathub.org/repo/flathub.flatpakrepo
 
 keyid=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr:/{print $10; exit}')
@@ -22,11 +24,12 @@ for bundle in "${files[@]}"; do
     flatpak build-import-bundle --gpg-sign="$keyid" --gpg-homedir="$GNUPGHOME" "$repo" "$bundle"
 done
 flatpak build-update-repo --gpg-sign="$keyid" --gpg-homedir="$GNUPGHOME" \
-    --title="$title" --prune "$repo"
+    --title="$title" --comment="$comment" --prune "$repo"
 
 cat > "$repo/index.flatpakrepo" <<REPO
 [Flatpak Repo]
 Title=$title
+Comment=$comment
 Url=$base_url
 Homepage=$base_url
 GPGKey=$pubkey
@@ -41,7 +44,7 @@ Title=$id
 Name=$id
 Branch=$branch
 Url=$base_url
-SuggestRemoteName=${title,,}
+SuggestRemoteName=$remote_name
 IsRuntime=false
 GPGKey=$pubkey
 RuntimeRepo=$runtime_repo

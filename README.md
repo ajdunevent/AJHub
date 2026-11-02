@@ -1,17 +1,17 @@
-# flatpak-repo
+# AJHub
 
 Signed Flatpak repository for the Dunevent apps, hosted on GitHub Pages.
-The landing page is https://ajdunevent.github.io/flatpak-repo/.
+The landing page is https://ajdunevent.github.io/AJHub/.
 
 ## Using it
 
 ```
-flatpak remote-add --user --if-not-exists dunevent https://ajdunevent.github.io/flatpak-repo/index.flatpakrepo
+flatpak remote-add --user --if-not-exists dunevent https://ajdunevent.github.io/AJHub/index.flatpakrepo
 flatpak install --user dunevent <app ID>
 ```
 
 Or install one app directly from its `.flatpakref` file, for example
-`https://ajdunevent.github.io/flatpak-repo/net.dunevent.Ripples.flatpakref`.
+`https://ajdunevent.github.io/AJHub/net.dunevent.Ripples.flatpakref`.
 
 ## Apps
 
