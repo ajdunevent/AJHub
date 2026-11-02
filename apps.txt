@@ -1,7 +1,12 @@
 # GitHub repository, then the release asset prefix.
 # Assets named <prefix>-<arch>-latest.flatpak are taken from the latest release.
-ajdunevent/Ripples Ripples
-ajdunevent/Sanctum Sanctum
-# Template for other projects (uncomment and edit):
+ajdunevent/Barkeep Barkeep
+# ajdunevent/Cajole Cajole
+# ajdunevent/Lithidion Lithidion
+# ajdunevent/Paradon Paradon
+# ajdunevent/Phodder Phodder
 # ajdunevent/Ralf Ralf
+# ajdunevent/Ringmaster Ringmaster
+ajdunevent/Ripples Ripples
 # ajdunevent/Salutations Salutations
+ajdunevent/Sanctum Sanctum
