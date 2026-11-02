@@ -28,6 +28,7 @@ cat > "$repo/index.flatpakrepo" <<REPO
 [Flatpak Repo]
 Title=$title
 Url=$base_url
+Homepage=$base_url
 GPGKey=$pubkey
 REPO
 

@@ -20,6 +20,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -51,6 +53,23 @@ jobs:
           owner=${GITHUB_REPOSITORY_OWNER,,}
           scripts/build-repo.sh bundles "$RUNNER_TEMP/repo" \
             "https://${owner}.github.io/${GITHUB_REPOSITORY#*/}/"
+
+      - name: Generate landing page and app table
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          owner=${GITHUB_REPOSITORY_OWNER,,}
+          scripts/generate-site.py apps.txt "$RUNNER_TEMP/repo" \
+            "https://${owner}.github.io/${GITHUB_REPOSITORY#*/}/" README.md
+
+      - name: Commit README
+        # The default token does not start new workflow runs, so this cannot loop.
+        run: |
+          git diff --quiet README.md && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update app directory" README.md
+          git push
 
       - uses: actions/upload-pages-artifact@v5
         with:
