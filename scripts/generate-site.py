@@ -12,13 +12,21 @@ Needs the gh CLI (authenticated through GH_TOKEN) and ostree.
 """
 import html
 import json
+import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 REMOTE_NAME = "ajhub"
 TITLE = "AJHub"
 SUBTITLE = "AJ's Flatpak Repository"
+GITHUB_MARK = (
+    '<svg class="gh" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">'
+    '<path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>'
+    "</svg>"
+)
 ICON_PATHS = [
     "scalable/apps/{id}.svg",
     "512x512/apps/{id}.png",
@@ -47,6 +55,15 @@ def app_ids(repo_dir):
         if parts[0] == "app":
             found.setdefault(parts[1].rsplit(".", 1)[-1], (parts[1], ref))
     return found
+
+
+def source_repo_url(base_url):
+    """This repository's GitHub URL: GITHUB_REPOSITORY in Actions, else derived from the Pages URL."""
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    if not repo:
+        parsed = urlparse(base_url)
+        repo = f"{parsed.hostname.split('.')[0]}/{parsed.path.strip('/')}"
+    return f"https://github.com/{repo}"
 
 
 def github_info(repo):
@@ -83,6 +100,9 @@ PAGE = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}: {subtitle}</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root {{
   --bg: #fafafa; --card: #ffffff; --fg: #1e1e1e; --muted: #5e5c64;
@@ -100,7 +120,11 @@ body {{
   font: 16px/1.5 system-ui, -apple-system, "Cantarell", "Segoe UI", sans-serif;
 }}
 main {{ max-width: 44rem; margin: 0 auto; padding: 2rem 1rem 4rem; }}
-h1 {{ font-size: 1.75rem; margin: 0 0 .25rem; }}
+h1 {{ font-size: 1.75rem; margin: 0; }}
+.top {{ display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .25rem; }}
+.brand {{ display: flex; align-items: center; gap: .75rem; }}
+.brand img {{ flex: none; }}
+.gh {{ vertical-align: -2px; margin-right: .3rem; }}
 h2 {{ font-size: 1.15rem; margin: 2rem 0 .75rem; }}
 p {{ margin: 0 0 1rem; color: var(--muted); }}
 a {{ color: var(--accent); }}
@@ -138,7 +162,10 @@ a {{ color: var(--accent); }}
 </head>
 <body>
 <main>
-<h1>{title}</h1>
+<div class="top">
+<div class="brand"><img src="logo.png" width="44" height="44" alt=""><h1>{title}</h1></div>
+<a href="{source_url}">{mark}Source</a>
+</div>
 <p>{subtitle}. Apps built from source on GitHub, published as a signed Flatpak repository.</p>
 
 <h2>Add the repository</h2>
@@ -169,7 +196,7 @@ APP = """<div class="card app">
 <h3>{name}<small>{version}</small></h3>
 <p>{description}</p>
 <div class="cmd"><code>flatpak install --user {remote} {app_id}</code><button type="button">Copy</button></div>
-<div class="links"><a href="{url}">Source on GitHub</a><a href="{app_id}.flatpakref">Install file (.flatpakref)</a></div>
+<div class="links"><a href="{url}">{mark}Source on GitHub</a><a href="{app_id}.flatpakref">Install file (.flatpakref)</a></div>
 </div>
 </div>"""
 
@@ -179,6 +206,7 @@ def main():
     repo_dir = Path(repo_dir)
     base_url = base_url.rstrip("/") + "/"
     ids = app_ids(repo_dir)
+    source_url = source_repo_url(base_url)
 
     entries = []
     for repo, prefix in read_apps(apps_file):
@@ -208,9 +236,18 @@ def main():
             app_id=html.escape(entry["app_id"]),
             url=html.escape(entry["url"]),
             remote=REMOTE_NAME,
+            mark=GITHUB_MARK,
         ))
+    assets = Path(__file__).resolve().parent.parent / "assets"
+    if assets.is_dir():
+        for asset in assets.iterdir():
+            if asset.is_file():
+                shutil.copy(asset, repo_dir / asset.name)
+    else:
+        print(f"::warning::{assets} not found; no logo or favicon.", file=sys.stderr)
     (repo_dir / "index.html").write_text(PAGE.format(
         title=html.escape(TITLE), subtitle=html.escape(SUBTITLE), remote=REMOTE_NAME, base_url=base_url,
+        source_url=html.escape(source_url), mark=GITHUB_MARK,
         apps="\n".join(cards) or '<p>No apps yet.</p>',
     ))
 
