@@ -1,7 +1,7 @@
 # GitHub repository, then the release asset prefix.
 # Assets named <prefix>-<arch>-latest.flatpak are taken from the latest release.
 ajdunevent/Barkeep Barkeep
-# ajdunevent/Cajole Cajole
+ajdunevent/Cajole Cajole
 # ajdunevent/Lithidion Lithidion
 # ajdunevent/Paradon Paradon
 # ajdunevent/Phodder Phodder
