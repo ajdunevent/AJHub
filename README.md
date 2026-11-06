@@ -1,4 +1,3 @@
-# AJHub
+AJHub is a signed Flatpak remote for my apps, mostly for my convenience, published with the utterly amazing [FrogPak](https://github.com/FrogPak/engine) project.
 
-A signed Flatpak remote for my apps, published with [FrogPak](https://github.com/FrogPak/engine).
-Visit https://ajdunevent.github.io/AJHub/ for commands to add the remote and install apps.
+Visit https://ajdunevent.github.io/AJHub/ for the commands to add the remote and install the apps.
