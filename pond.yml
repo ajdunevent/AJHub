@@ -18,6 +18,8 @@ apps:
   net.dunevent.Cajole:
     repo: ajdunevent/Cajole
     assets: "{name}-{arch}-latest.flatpak"
+  net.dunevent.Ringmaster:
+    repo: ajdunevent/Ringmaster
   net.dunevent.Ripples:
     repo: ajdunevent/Ripples
     assets: "{name}-{arch}-latest.flatpak"
@@ -36,9 +38,6 @@ apps:
   #  assets: "{name}-{arch}-latest.flatpak"
   #net.dunevent.Ralf:
   #  repo: ajdunevent/Ralf
-  #  assets: "{name}-{arch}-latest.flatpak"
-  #net.dunevent.Ringmaster:
-  #  repo: ajdunevent/Ringmaster
   #  assets: "{name}-{arch}-latest.flatpak"
   #net.dunevent.Salutations:
   #  repo: ajdunevent/Salutations
