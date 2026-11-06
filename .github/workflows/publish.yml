@@ -1,89 +1,33 @@
 name: Publish
 
 on:
+  # Hourly check for new app releases; a rebuild runs only when something changed.
   schedule:
-    - cron: '17 */6 * * *'
+    - cron: '17 * * * *'
+  # The apps' release workflows start this with `gh workflow run publish.yml`,
+  # so keep this file's name and this trigger.
   workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild even if nothing changed
+        type: boolean
+        default: false
   repository_dispatch:
     types: [release-published]
   push:
     branches: [main]
-    paths: [apps.txt, scripts/**, .github/workflows/publish.yml]
 
-permissions:
-  contents: read
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+permissions: {}
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  pond:
+    uses: FrogPak/engine/.github/workflows/publish-pond.yml@v1
     permissions:
       contents: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install tooling
-        run: sudo apt-get update && sudo apt-get install -y flatpak ostree gnupg
-
-      - name: Import signing key
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-        run: |
-          export GNUPGHOME="$RUNNER_TEMP/gnupg"
-          install -d -m 700 "$GNUPGHOME"
-          gpg --batch --import <<< "$GPG_PRIVATE_KEY"
-          echo "GNUPGHOME=$GNUPGHOME" >> "$GITHUB_ENV"
-
-      - name: Download latest bundles
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          mkdir bundles
-          while read -r repo prefix; do
-            [[ -z "$repo" || "$repo" == \#* ]] && continue
-            gh release download --repo "$repo" --pattern "${prefix}-*-latest.flatpak" --dir bundles \
-              || echo "::warning::No release bundles found for $repo; skipping."
-          done < apps.txt
-
-      - name: Build repository
-        run: |
-          owner=${GITHUB_REPOSITORY_OWNER,,}
-          scripts/build-repo.sh bundles "$RUNNER_TEMP/repo" \
-            "https://${owner}.github.io/${GITHUB_REPOSITORY#*/}/"
-
-      - name: Generate landing page and app table
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          owner=${GITHUB_REPOSITORY_OWNER,,}
-          scripts/generate-site.py apps.txt "$RUNNER_TEMP/repo" \
-            "https://${owner}.github.io/${GITHUB_REPOSITORY#*/}/" README.md
-
-      - name: Commit README
-        # The default token does not start new workflow runs, so this cannot loop.
-        run: |
-          git diff --quiet README.md && exit 0
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Update app directory" README.md
-          git push
-
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: ${{ runner.temp }}/repo
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
+      actions: write
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
+    with:
+      force: ${{ inputs.force == true }}
+    secrets:
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
