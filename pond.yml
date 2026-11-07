@@ -14,10 +14,8 @@ apps:
   # own release workflow; {name} is the last part of the app ID.
   net.dunevent.Barkeep:
     repo: ajdunevent/Barkeep
-    assets: "*-{arch}.flatpak"
   net.dunevent.Cajole:
     repo: ajdunevent/Cajole
-    assets: "*-{arch}.flatpak"
   #net.dunevent.Lithidion:
   #  repo: ajdunevent/Lithidion
   #net.dunevent.Paradon:
@@ -30,9 +28,7 @@ apps:
     repo: ajdunevent/Ringmaster
   net.dunevent.Ripples:
     repo: ajdunevent/Ripples
-    assets: "*-{arch}.flatpak"
   net.dunevent.Salutations:
     repo: ajdunevent/Salutations
   net.dunevent.Sanctum:
     repo: ajdunevent/Sanctum
-    assets: "*-{arch}.flatpak"
