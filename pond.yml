@@ -5,8 +5,8 @@ pond:
   title: AJHub
   subtitle: AJ's Flatpak Repository
   remote: ajhub                  # unchanged, so existing users keep receiving updates
-  logo: assets/logo.png
-  favicon: assets/logo.png
+  logo-square: assets/logo.png
+  #favicon: assets/logo.png
   order: name
 
 apps:
@@ -14,31 +14,21 @@ apps:
   # own release workflow; {name} is the last part of the app ID.
   net.dunevent.Barkeep:
     repo: ajdunevent/Barkeep
-    assets: "{name}-{arch}-latest.flatpak"
   net.dunevent.Cajole:
     repo: ajdunevent/Cajole
-    assets: "{name}-{arch}-latest.flatpak"
+  #net.dunevent.Lithidion:
+  #  repo: ajdunevent/Lithidion
+  #net.dunevent.Paradon:
+  #  repo: ajdunevent/Paradon
+  #net.dunevent.Phodder:
+  #  repo: ajdunevent/Phodder
+  #net.dunevent.Ralf:
+  #  repo: ajdunevent/Ralf
   net.dunevent.Ringmaster:
     repo: ajdunevent/Ringmaster
   net.dunevent.Ripples:
     repo: ajdunevent/Ripples
-    assets: "{name}-{arch}-latest.flatpak"
-  net.dunevent.Sanctum:
-    repo: ajdunevent/Sanctum
-    assets: "{name}-{arch}-latest.flatpak"
-  # Not public yet; uncomment once each has a release.
-  #net.dunevent.Lithidion:
-  #  repo: ajdunevent/Lithidion
-  #  assets: "{name}-{arch}-latest.flatpak"
-  #net.dunevent.Paradon:
-  #  repo: ajdunevent/Paradon
-  #  assets: "{name}-{arch}-latest.flatpak"
-  #net.dunevent.Phodder:
-  #  repo: ajdunevent/Phodder
-  #  assets: "{name}-{arch}-latest.flatpak"
-  #net.dunevent.Ralf:
-  #  repo: ajdunevent/Ralf
-  #  assets: "{name}-{arch}-latest.flatpak"
   #net.dunevent.Salutations:
   #  repo: ajdunevent/Salutations
-  #  assets: "{name}-{arch}-latest.flatpak"
+  net.dunevent.Sanctum:
+    repo: ajdunevent/Sanctum
