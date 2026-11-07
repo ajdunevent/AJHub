@@ -31,8 +31,8 @@ apps:
   net.dunevent.Ripples:
     repo: ajdunevent/Ripples
     assets: "*-{arch}.flatpak"
-  #net.dunevent.Salutations:
-  #  repo: ajdunevent/Salutations
+  net.dunevent.Salutations:
+    repo: ajdunevent/Salutations
   net.dunevent.Sanctum:
     repo: ajdunevent/Sanctum
     assets: "*-{arch}.flatpak"
