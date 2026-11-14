@@ -20,8 +20,8 @@ apps:
   #  repo: ajdunevent/Lithidion
   net.dunevent.Owlet:
     repo: ajdunevent/Owlet
-  #net.dunevent.Paradon:
-  #  repo: ajdunevent/Paradon
+  net.dunevent.Paradon:
+    repo: ajdunevent/Paradon
   #net.dunevent.Phodder:
   #  repo: ajdunevent/Phodder
   #net.dunevent.Ralf:
