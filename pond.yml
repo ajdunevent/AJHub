@@ -18,6 +18,8 @@ apps:
     repo: ajdunevent/Cajole
   #net.dunevent.Lithidion:
   #  repo: ajdunevent/Lithidion
+  net.dunevent.NightManager:
+    repo: ajdunevent/NightManager
   net.dunevent.Owlet:
     repo: ajdunevent/Owlet
   net.dunevent.Paradon:
