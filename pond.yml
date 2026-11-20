@@ -3,15 +3,12 @@
 
 pond:
   title: AJHub
-  subtitle: AJ's Flatpak Repository
+  subtitle: A Flatpak remote for AJ's personal projects
   remote: ajhub                  # unchanged, so existing users keep receiving updates
   logo-square: assets/logo.png
-  #favicon: assets/logo.png
   order: name
 
 apps:
-  # Each release has <AppName>-<arch>-latest.flatpak files, made by the app's
-  # own release workflow; {name} is the last part of the app ID.
   net.dunevent.Barkeep:
     repo: ajdunevent/Barkeep
   net.dunevent.Cajole:
