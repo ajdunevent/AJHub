@@ -24,8 +24,8 @@ apps:
     repo: ajdunevent/Owlet
   net.dunevent.Paradon:
     repo: ajdunevent/Paradon
-  #net.dunevent.Phodder:
-  #  repo: ajdunevent/Phodder
+  net.dunevent.Phodder:
+    repo: ajdunevent/Phodder
   #net.dunevent.Ralf:
   #  repo: ajdunevent/Ralf
   net.dunevent.Ringmaster:
